@@ -2,10 +2,13 @@ const express=require("express");
 const app=express();
 const mongoose=require("mongoose");
 const del=require("./databases/logdata");
-const mod=require("./databases/urldb.js");
+const mod=require("./databases/urldata.js");
+// require("dotenv").config();
+const cors = require("cors");
 const port=9000;
 const {setuser,getuser}=require("./authen");
 const cookieParser = require("cookie-parser");
+const shortid=require("shortid");
 const {v4:uuidv4}=require("uuid");
 
 
@@ -25,20 +28,26 @@ mongoose.connect('mongodb://127.0.0.1:27017/space')
 
 
 
-app.post("/sginup",async(req,res)=>{
+app.post("/signup",async(req,res)=>{
     const {name,email,password}=req.body;
-    const check=await act.findOne({email});
-    if(check){
-        res.send("The email already exists");
+    const check=await del.findOne({email});
+    try{
+         if(check){
+        res.send("already exists");
+        }
+        else{
+            const user=await del.create({
+            name,
+            email,
+            password,
+        });
+        return res.send("done");
+        }
     }
-    else{
-        const user=await del.create({
-        name,
-        email,
-        password,
-    });
+    catch(err){
+        console.log(err);
+        return res.status(500).send("server error");
     }
-    return res.send("done")
 });
 
 app.post("/login",async(req,res)=>{
@@ -70,7 +79,7 @@ app.post("/urlshort", async (req, res) => {
 
     const shortd = shortid.generate();
 
-    await space.create({
+    await mod.create({
         shortd: shortd,
         redirectlink: url,
         visitHistory: []
@@ -84,7 +93,7 @@ app.post("/urlshort", async (req, res) => {
 app.get("/:shortId", async (req, res) => {
     const shortId = req.params.shortId;
 
-    const entry = await space.findOneAndUpdate(
+    const entry = await mod.findOneAndUpdate(
         { shortd: shortId },
         {
             $push: {

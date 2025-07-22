@@ -25,7 +25,7 @@ function Signup(){
                 if(result.data=="alreadyexists"){
                     seterrmssg("email already exists");
                 }
-                else if(result.data.equals("goon")){
+                else if(result.data=="done"){
                     navigate('/home');
                 }
             })

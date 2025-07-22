@@ -1,7 +1,7 @@
-import mongoose from "mongoose";
+const mongoose=require("mongoose");
 
 const dataschema=new mongoose.Schema({
-    fname:{
+    name:{
         type:String,
         required:true,
     },

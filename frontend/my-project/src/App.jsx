@@ -3,7 +3,7 @@ import { BrowserRouter,Routes,Route } from 'react-router-dom'
 import Slash from './slash'
 import Home from './home'
 import Signup from './signup'
-import Login from './login'
+import Login from './loginp'
 
 function App() {
   
@@ -14,7 +14,7 @@ function App() {
         <Routes>
           <Route path='/' element={<Slash/>}></Route>
           <Route path='/signup' element={<Signup/>}></Route>
-          <Route path='/login' element={<Login/>}></Route>
+          <Route path='/loginp' element={<Login/>}></Route>
           <Route path='/home' element={<Home/>}></Route>
         </Routes>
       </BrowserRouter>

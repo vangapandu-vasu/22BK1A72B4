@@ -1,6 +1,6 @@
 const jwt=require("jsonwebtoken");
-require("dotenv").config();
-const skey=dotenv.process.skey;
+// require("dotenv").config();
+const skey="json@1234";
 
 
 
