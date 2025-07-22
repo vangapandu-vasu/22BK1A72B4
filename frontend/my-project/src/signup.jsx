@@ -1,86 +1,79 @@
-import axios from 'axios';
-import { useState } from 'react';
-import {  useNavigate } from 'react-router';
-import './designing/signup.css';
-
-
+import { useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router"; 
 
 function Signup(){
 
+    const [name, setName] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setpassword] = useState("");
+    const [errmssg, seterrmssg] = useState("");
+
     const navigate=useNavigate();
 
-    const[fname, setFname] = useState("");
-    const[email, setEmail] = useState("");
-    const[password, setPassword] = useState("");
-    const[errmsg,setErrmsg]=useState("");
+    const emailcheck=/^[A-Za-z0-9]+[A-Za-z0-9._%-]*@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
 
-    const emailCheck = /^[A-Za-z0-9]+[A-Za-z0-9._%-]*@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
-
-
-    let handlesig=(e)=>{
+    let handlesubmit=(e)=>{
         e.preventDefault();
-            if(!email.match(emailCheck)){
-                setErrmsg("invalid email format.please enter valid email address");
-            }
-            else
-            {
-                setErrmsg("");
-                axios.post('http://localhost:9000/signup',{fname,email,password})
-                .then(result=>{
-                console.log(result)
-                if(result.data==="already exists"){
-                    setErrmsg("the email address already exists");
+        if(!email.match(emailcheck)){
+            seterrmssg("please enter valid email address");
+        }
+        else{
+            seterrmssg("");
+            axios.post('http://localhost:9000:signup',{name,email,password})
+            .then(result=>{
+                if(result.data.equals("alreadyexists")){
+                    seterrmssg("email already exists");
                 }
-                else if(result.data==="success"){
-                    navigate("/home");
+                else if(result.data.equals("goon")){
+                    navigate('/home');
                 }
-                })
-                .catch(err=>console.log(err));
-            }
-
-        };
+            })
+        }
+    }
 
     return(
-        <>
-            <span className="formone">
-                <div className='formin' id='logo'>
-                    <h5>SIGNUP</h5>
+    <>
+        <span
+        className="border">
+            <div className="innerborder">
+                SIGNUP FORM
+            </div>
+            <form onSubmit={(e)=>handlesubmit(e)}>
+                <div className="divname">
+                    <input
+                    className="name"
+                    placeholder="enter your name"
+                    type="input"
+                    onChange={(e)=>setName(e.target.value)}
+                    required/>
                 </div>
-                <form onSubmit={(e)=>handlesig(e)}>
-                    <div className="formin" id='namee'>
-                        <input 
-                        className="name" 
-                        placeholder="enter your name"
-                        onChange={(e)=>setFname(e.target.value)} 
-                        required
-                        />
-                    </div>
-                    <div className="formin" id='emaill' >
-                        <input 
-                        className="email" 
-                        placeholder="enter your email"
-                        onChange={(e)=>setEmail(e.target.value)} 
-                        required
-                        />
-                    </div>
-                    <div className="formin" id='passwordd'>
-                        <input 
-                        className="password" 
-                        type="password" placeholder="enter your password"
-                        onChange={(e)=>setPassword(e.target.value)} 
-                        required
-                        />
-                    </div>
-                    {errmsg && <p className="error-msg">{errmsg}</p>}
-                    <div className='formin' id='buttonn'>
-                        <button className="buttononsig" type="submit" >Register</button>
-                    </div>
-                </form>
-            </span>
-        </>
-    )
+                <div className="divemail">
+                    <input className="email"
+                    placeholder="enter your email"
+                    type="input"
+                    onChange={(e)=>setEmail(e.target.value)}
+                    required/>
+                </div>
+                <div className="divpass">
+                    <input
+                    className="pass"
+                    placeholder="password"
+                    type="password"
+                    onChange={(e)=>setpassword(e.target.value)}
+                    required/>
+                </div>
+                {errmssg && <p className="error-msg">{errmssg}</p>}
+                <div>
+                    <button type="submit">
+                        Register
+                    </button>
+                </div>
+            </form>
+        </span>
+    </>
+    );
+
 }
-
-
 
 export default Signup;

@@ -1,11 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import axios from 'axios'
-import './designing/login.css';
+
 
 function Login(){
-
-    const navigate = useNavigate();
 
     const[email, setEmail] = useState("");
     const[password, setPassword] = useState("");
@@ -13,6 +11,7 @@ function Login(){
 
     const emailCheck = /^[A-Za-z0-9]+[A-Za-z0-9._%-]*@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
 
+    const navigate = useNavigate();
 
     let handlelogin=(e)=>{
         e.preventDefault();
