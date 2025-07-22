@@ -20,9 +20,9 @@ function Signup(){
         }
         else{
             seterrmssg("");
-            axios.post('http://localhost:9000:signup',{name,email,password})
+            axios.post('http://localhost:9000/signup',{name,email,password},{withCredentials:true})
             .then(result=>{
-                if(result.data.equals("alreadyexists")){
+                if(result.data=="alreadyexists"){
                     seterrmssg("email already exists");
                 }
                 else if(result.data.equals("goon")){

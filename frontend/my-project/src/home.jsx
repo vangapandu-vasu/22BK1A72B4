@@ -1,9 +1,8 @@
-// src/UrlShortener.jsx
 import  { useState } from 'react';
 import axios from 'axios';
 import './gome.css';
 
-export default function UrlShortener() {
+function Home() {
   const [url, setUrl] = useState('');
   const [shortId, setShortId] = useState(null);
 
@@ -64,3 +63,5 @@ export default function UrlShortener() {
     </div>
   );
 }
+
+export default Home;

@@ -1,31 +1,65 @@
-const express = require("express");
-const mongoose = require("mongoose");
+const express=require("express");
+const app=express();
+const mongoose=require("mongoose");
+const del=require("./databases/logdata");
+const mod=require("./databases/urldb.js");
+const port=9000;
+const {setuser,getuser}=require("./authen");
 const cookieParser = require("cookie-parser");
-const shortid = require("shortid");
-const space = require("./databases/urldb.js");
-const { getuser } = require("./authen");
-const cors = require("cors");
+const {v4:uuidv4}=require("uuid");
 
-const app = express();
-const port = 9000;
+
 
 app.use(express.json());
-app.use(cookieParser());
 app.use(cors({
-    origin: "http://localhost:5173",
-    credentials: true
+    origin:"http://localhost:5173",
+    credentials:true,
 }));
+app.use(cookieParser());
+app.use(express.urlencoded({express:true}));
+app.use(cookieParser());
 
-app.use(express.urlencoded({ extended: true }));
+mongoose.connect('mongodb://127.0.0.1:27017/space')
+.then(()=>console.log("database connected"))
+.catch(()=>console.log("not connnected"));
 
-mongoose.connect("mongodb://127.0.0.1:27017/space")
-    .then(() => {
-        console.log("MongoDB connected");
-    })
-    .catch(() => {
-        console.log("Connection failed");
+
+
+app.post("/sginup",async(req,res)=>{
+    const {name,email,password}=req.body;
+    const check=await act.findOne({email});
+    if(check){
+        res.send("The email already exists");
+    }
+    else{
+        const user=await del.create({
+        name,
+        email,
+        password,
     });
+    }
+    return res.send("done")
+});
 
+app.post("/login",async(req,res)=>{
+    const {email,password}=req.body;
+    const user=await act.findOne({email,password})
+    if(!user){
+        console.log("invalid credentials");
+        return res.send("wrong details");
+    }
+    else{
+        const token=setuser(user);
+        res.cookie("uid",token,
+            {
+                httpOnly: true, // Prevents JavaScript from accessing it
+                secure: true, // Set true in production (HTTPS required)
+                sameSite: "lax", // Allows sending cookies on same-site requests
+            }
+        );
+        return res.send("access granted");
+    }
+});
 // POST route to shorten URL
 app.post("/urlshort", async (req, res) => {
     const url = req.body.url;
@@ -85,9 +119,6 @@ app.get("/authen/allusers", async (req, res) => {
         res.status(500).json({ error: "Authentication check failed" });
     }
 });
-
-// Server start
-app.listen(port, () => {
-    console.log("Server started on port", port);
+app.listen(port,(req,res)=>{
+    console.log("worked");
 });
-

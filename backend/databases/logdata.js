@@ -15,6 +15,6 @@ const dataschema=new mongoose.Schema({
     },
 });
 
-const del=new mongoose.model("sample",space);
+const del=new mongoose.model("sample",dataschema);
 
 module.exports=del;
