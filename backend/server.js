@@ -58,7 +58,6 @@ app.post("/login",async(req,res)=>{
             }
         );
         return res.send("access granted");
-        return res.status(200).json({ message: "access granted", token });
     }
 });
 
@@ -119,7 +118,6 @@ server.get("/authen/allusers",async(req,res)=>{
         console.log("there exists a error",error);
         return res.status(500).json("server side error");
     };
-    
 }); 
 
 app.listen(port,(req,res)=>{
